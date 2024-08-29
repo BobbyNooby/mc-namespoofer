@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "namespoofer",
+  "version": "${version}",
+  "name": "NameSpoofer",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/namespoofer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.bobbynooby.namespoofer.client.NamespooferClient"
+    ],
+    "main": [
+      "dev.bobbynooby.namespoofer.Namespoofer"
+    ]
+  },
+  "mixins": [
+    "namespoofer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
