@@ -1,10 +1,10 @@
 package dev.bobbynooby.namespoofer;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 
-public class Namespoofer implements ModInitializer {
-
+public class NameSpoofer implements ClientModInitializer {
     @Override
-    public void onInitialize() {
+    public void onInitializeClient() {
+
     }
 }

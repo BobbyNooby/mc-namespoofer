@@ -7,14 +7,11 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/namespoofer/icon.png",
+  "icon": "assets/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "dev.bobbynooby.namespoofer.client.NamespooferClient"
-    ],
-    "main": [
-      "dev.bobbynooby.namespoofer.Namespoofer"
+      "dev.bobbynooby.namespoofer.NameSpoofer"
     ]
   },
   "mixins": [

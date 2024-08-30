@@ -10,5 +10,5 @@ client side with a username that you set in the settings.
 - Changeable Spoof Name
 - Chat Spoof ✅
 - Player List Spoof ✅
-- Advancements Spoof
-- Death Message Spoof
+- Advancements Spoof ✅
+- Death Message Spoof ✅
