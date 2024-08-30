@@ -1,6 +1,7 @@
 package dev.bobbynooby.namespoofer.mixins;
 
 import com.mojang.authlib.GameProfile;
+import dev.bobbynooby.namespoofer.config.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
@@ -24,8 +25,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "getDisplayName", at = @At("HEAD"), cancellable = true)
     public void getDisplayName(CallbackInfoReturnable<Text> cir) {
         if (Objects.equals(this.getProfile().getId(), client.player.getUuid())) {
-
-            Text spoofedName = Text.literal("Skibi");
+            Text spoofedName = Text.literal(Config.getSpoofedName());
             cir.setReturnValue(spoofedName);
             cir.cancel();
         }
