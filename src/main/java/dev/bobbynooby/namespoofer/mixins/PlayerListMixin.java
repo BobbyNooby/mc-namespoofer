@@ -24,10 +24,12 @@ public abstract class PlayerListMixin {
 
     @Inject(method = "getDisplayName", at = @At("HEAD"), cancellable = true)
     public void getDisplayName(CallbackInfoReturnable<Text> cir) {
-        if (Objects.equals(this.getProfile().getId(), client.player.getUuid())) {
-            Text spoofedName = Text.literal(Config.getSpoofedName());
-            cir.setReturnValue(spoofedName);
-            cir.cancel();
+        if (Config.getSpoofAll() && Config.getSpoofPlayerList()) {
+            if (Objects.equals(this.getProfile().getId(), client.player.getUuid())) {
+                Text spoofedName = Text.literal(Config.getSpoofedName());
+                cir.setReturnValue(spoofedName);
+                cir.cancel();
+            }
         }
     }
 }

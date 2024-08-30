@@ -49,31 +49,33 @@ public abstract class ChatMixin {
 
     @Inject(method = "onChatMessage", at = @At("HEAD"), cancellable = true)
     private void onChatMessage(ChatMessageS2CPacket packet, CallbackInfo ci) {
-        Optional<MessageBody> optional = packet.body().toBody(this.signatureStorage);
-        if (optional.isEmpty()) {
-            this.getConnection().disconnect(INVALID_PACKET_TEXT);
-        } else {
+        if (Config.getSpoofAll() && Config.getSpoofChat()) {
+            Optional<MessageBody> optional = packet.body().toBody(this.signatureStorage);
+            if (optional.isEmpty()) {
+                this.getConnection().disconnect(INVALID_PACKET_TEXT);
+            } else {
 
-            try {
-                if (client.player != null && packet.sender().equals(client.player.getGameProfile().getId())) {
+                try {
+                    if (client.player != null && packet.sender().equals(client.player.getGameProfile().getId())) {
 
-                    MessageType.Parameters spoofedParameters = new MessageType.Parameters(packet.serializedParameters().type(), Text.literal(Config.getSpoofedName()), null);
-                    ChatMessageS2CPacket spoofedPacket = new ChatMessageS2CPacket(packet.sender(), packet.index(), packet.signature(), packet.body(), packet.unsignedContent(), packet.filterMask(), spoofedParameters);
-                    MessageLink messageLink;
-                    messageLink = new MessageLink(spoofedPacket.index(), packet.sender(), UUID.randomUUID());
-                    GameProfile spoofedProfile = new GameProfile(packet.sender(), Config.getSpoofedName());
+                        MessageType.Parameters spoofedParameters = new MessageType.Parameters(packet.serializedParameters().type(), Text.literal(Config.getSpoofedName()), null);
+                        ChatMessageS2CPacket spoofedPacket = new ChatMessageS2CPacket(packet.sender(), packet.index(), packet.signature(), packet.body(), packet.unsignedContent(), packet.filterMask(), spoofedParameters);
+                        MessageLink messageLink;
+                        messageLink = new MessageLink(spoofedPacket.index(), packet.sender(), UUID.randomUUID());
+                        GameProfile spoofedProfile = new GameProfile(packet.sender(), Config.getSpoofedName());
 
-                    SignedMessage signedMessage = new SignedMessage(messageLink, spoofedPacket.signature(), (MessageBody) optional.get(), spoofedPacket.unsignedContent(), spoofedPacket.filterMask());
+                        SignedMessage signedMessage = new SignedMessage(messageLink, spoofedPacket.signature(), (MessageBody) optional.get(), spoofedPacket.unsignedContent(), spoofedPacket.filterMask());
 
-                    this.client.getMessageHandler().onChatMessage(signedMessage, spoofedProfile, spoofedPacket.serializedParameters());
+                        this.client.getMessageHandler().onChatMessage(signedMessage, spoofedProfile, spoofedPacket.serializedParameters());
 
-                    System.out.println(spoofedPacket.serializedParameters());
+                        System.out.println(spoofedPacket.serializedParameters());
 
 
-                    ci.cancel();
+                        ci.cancel();
+                    }
+                } catch (Exception e) {
+                    LogPrinter.println("Error : " + e);
                 }
-            } catch (Exception e) {
-                LogPrinter.println("Error : " + e);
             }
         }
     }
@@ -82,10 +84,12 @@ public abstract class ChatMixin {
     @Inject(method = "onGameMessage", at = @At("HEAD"), cancellable = true)
     private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
 
-        GameMessageS2CPacket spoofedPacket = new GameMessageS2CPacket(nameReplacer(packet.content()), packet.overlay());
+        if (Config.getSpoofAll() && Config.getSpoofGameMessages()) {
+            GameMessageS2CPacket spoofedPacket = new GameMessageS2CPacket(nameReplacer(packet.content()), packet.overlay());
 
-        this.client.getMessageHandler().onGameMessage(spoofedPacket.content(), spoofedPacket.overlay());
-        ci.cancel();
+            this.client.getMessageHandler().onGameMessage(spoofedPacket.content(), spoofedPacket.overlay());
+            ci.cancel();
+        }
     }
 
     @Unique
